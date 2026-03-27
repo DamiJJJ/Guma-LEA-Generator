@@ -1,21 +1,37 @@
-"use strict";
+// ── Read faction from URL param ───────────────────────────────
+const urlFaction = new URLSearchParams(window.location.search).get("faction");
+let FACTION_KEY = urlFaction && FACTIONS[urlFaction] ? urlFaction : "lspd";
+let faction = FACTIONS[FACTION_KEY];
 
-// ── Detect faction from body data attribute ───────────────────
-const FACTION_KEY = document.body.dataset.faction || "lspd";
-const faction = FACTIONS[FACTION_KEY];
+// ── Switch faction ────────────────────────────────────────────
+function switchFaction(key) {
+  FACTION_KEY = key;
+  faction = FACTIONS[key];
 
-// ── Populate selects from faction data ───────────────────────
+  // Update active button
+  document.querySelectorAll(".faction-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.faction === key);
+  });
+
+  // Repopulate selects
+  populateSelects();
+  randomizePay();
+}
+
+// ── Populate selects from faction data ────────────────────────
 function populateSelects() {
   const rankSel = document.getElementById("rank");
-  faction.ranks.forEach((r) => {
+  rankSel.innerHTML = "";
+  faction.ranks.forEach((r, i) => {
     const o = document.createElement("option");
     o.value = r;
     o.text = r;
-    if (r === faction.ranks[0]) o.selected = true; // default: pierwszy rank
+    if (i === 0) o.selected = true;
     rankSel.appendChild(o);
   });
 
   const divSel = document.getElementById("division");
+  divSel.innerHTML = "";
   faction.divisions.forEach((d) => {
     const o = document.createElement("option");
     o.value = d;
