@@ -126,13 +126,22 @@ function generateCard() {
   const rw = W - rx - 20;
 
   // ── Draw label + value pair on canvas ──
-  function lv(label, val, x, y) {
-    ctx.font = "bold 20px 'Courier New', monospace";
+  function lv(label, val, x, y, maxWidth = rw) {
+    // Auto-scale font if text is too wide
+    const fullText = label + ":  " + val;
+    let fontSize = 20;
+    ctx.font = `bold ${fontSize}px 'Courier New', monospace`;
+
+    while (ctx.measureText(fullText).width > maxWidth && fontSize > 11) {
+      fontSize -= 1;
+      ctx.font = `bold ${fontSize}px 'Courier New', monospace`;
+    }
+
     ctx.fillStyle = "black";
     ctx.textAlign = "left";
     ctx.fillText(label + ": ", x, y);
     const lw = ctx.measureText(label + ": ").width;
-    ctx.font = "20px 'Courier New', monospace";
+    ctx.font = `${fontSize}px 'Courier New', monospace`;
     ctx.fillStyle = "#111";
     ctx.fillText(val, x + lw, y);
   }
@@ -164,17 +173,18 @@ function generateCard() {
     lv("Email", email, rx, y);
     y += lh + 8;
 
-    lv("Serial", serial, rx, y);
-    lv("Badge", badge, rx + 210, y);
+    const half = rw / 2 - 10;
+    lv("Serial", serial, rx, y, half);
+    lv("Badge", badge, rx + 210, y, half);
     y += lh;
-    lv("Ethnicity", ethnicity, rx, y);
-    lv("Gender", gender, rx + 210, y);
+    lv("Ethnicity", ethnicity, rx, y, half);
+    lv("Gender", gender, rx + 210, y, half);
     y += lh;
-    lv("Current Age", age, rx, y);
-    lv("Year Hired", yearHired, rx + 210, y);
+    lv("Current Age", age, rx, y, half);
+    lv("Year Hired", yearHired, rx + 210, y, half);
     y += lh;
-    lv("Height", height, rx, y);
-    lv("Weight", weight + " lbs", rx + 210, y);
+    lv("Height", height, rx, y, half);
+    lv("Weight", weight + " lbs", rx + 210, y, half);
     y += lh + 12;
 
     // Payments box
