@@ -4,15 +4,64 @@
 const urlFaction = new URLSearchParams(window.location.search).get("faction");
 let REPORT_FACTION = urlFaction && FACTIONS[urlFaction] ? urlFaction : "lspd";
 
+buildFactionSwitcher(switchReportFaction, "lspd", FACTION_TYPE.POLICE);
+
 function switchReportFaction(key) {
+  const panel = document.getElementById("customFactionPanel");
+
+  if (key === "custom") {
+    panel.style.display = "block";
+    applyCustomFaction();
+    return;
+  }
+
+  panel.style.display = "none";
   REPORT_FACTION = key;
+
   document.querySelectorAll(".faction-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.faction === key);
   });
+
+  refreshPreview();
+}
+
+function applyCustomFaction() {
+  const name = document.getElementById("customFactionName")?.value.trim() || "Custom Faction";
+
+  // Store custom data globally so getActiveFaction() can access it
+  window._customFactionData = {
+    name: name,
+    short: name,
+    emailDomain: "faction.gov",
+    cardBg: "#f0f0f0",
+    cardBorder: "#888888",
+    ranks: ["Officer"],
+    divisions: ["General Division"],
+    seniorRanks: [],
+    midRanks: [],
+    icon: null,
+  };
+
+  REPORT_FACTION = "custom";
+
+  document.querySelectorAll(".faction-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.faction === "custom");
+  });
+
   refreshPreview();
 }
 
 function getActiveFaction() {
+  if (REPORT_FACTION === "custom") {
+    return (
+      window._customFactionData || {
+        name: "Custom Faction",
+        emailDomain: "faction.gov",
+        cardBg: "#f0f0f0",
+        cardBorder: "#888888",
+      }
+    );
+  }
   return FACTIONS[REPORT_FACTION];
 }
 

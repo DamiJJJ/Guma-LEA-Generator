@@ -583,3 +583,48 @@ body h3 {
   background: #1a2a4a;
   color: #f0c040;
 }
+
+/* Custom faction panel */
+.custom-faction-panel {
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding: 14px;
+  background: #0f1e3d;
+  border: 1px solid #2a2a5a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.custom-faction-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Reuse .form-group styles — no extra CSS needed for label and input */
+.custom-faction-panel .form-group {
+  margin-bottom: 0;
+}
+
+.email-input-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.email-input-row input {
+  flex: 1;
+  min-width: 0; /* prevents overflow in flex */
+}
+
+.email-at {
+  color: #aaa;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .custom-faction-fields {
+    grid-template-columns: 1fr;
+  }
+}
