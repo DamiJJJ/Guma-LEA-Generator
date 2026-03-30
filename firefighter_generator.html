@@ -14,9 +14,9 @@
     <link rel="mask-icon" href="assets/favicon.ico" color="#f0c040" />
     <link rel="manifest" href="assets/manifest.json" />
   </head>
-  <body data-faction="lspd">
+  <body data-faction="lscofd">
     <button onclick="history.back()" class="btn-back">&larr; Go Back</button>
-    <h2>OFFICER CARD GENERATOR</h2>
+    <h2>FIREFIGHTER CARD GENERATOR</h2>
 
     <!-- Faction switcher -->
     <div class="faction-switcher" id="factionSwitcher"></div>
@@ -176,8 +176,8 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         initGenerator({
-          factionType: FACTION_TYPE.POLICE,
-          defaultFaction: "lspd",
+          factionType: FACTION_TYPE.FIRE,
+          defaultFaction: "lscofd",
         });
       });
     </script>

@@ -380,8 +380,24 @@ function debounce(fn, delay = 300) {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-populateSelects();
-randomizePay();
-generateCard();
+function initGenerator({ factionType = null, defaultFaction = "lspd" } = {}) {
+  // Set default faction based on passed config
+  const urlFaction = new URLSearchParams(window.location.search).get("faction");
 
-document.querySelector(".form-panel").addEventListener("input", debounce(generateCard));
+  // Validate: URL faction must match the expected type
+  if (urlFaction && FACTIONS[urlFaction]) {
+    const matchesType = factionType === null || FACTIONS[urlFaction].type === factionType;
+    FACTION_KEY = matchesType ? urlFaction : defaultFaction;
+  } else {
+    FACTION_KEY = defaultFaction;
+  }
+
+  faction = FACTIONS[FACTION_KEY];
+
+  buildFactionSwitcher(switchFaction, FACTION_KEY, factionType);
+  populateSelects();
+  randomizePay();
+  generateCard();
+
+  document.querySelector(".form-panel").addEventListener("input", debounce(generateCard));
+}
