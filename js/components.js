@@ -3,7 +3,7 @@ class GumaFooter extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <footer class="mt-auto w-full border-t border-guma-border bg-guma-footer">
-        <div class="mx-auto flex w-full max-w-8xl flex-col items-start justify-between gap-4 px-4 py-4 text-sm text-zinc-400 sm:flex-row sm:items-center">
+        <div class="mx-auto flex w-full max-w-[1400px] flex-col items-start justify-between gap-4 px-4 py-4 text-sm text-zinc-400 sm:flex-row sm:items-center">
           <span class="text-xs sm:text-sm">GUMA Tools v1.4 &copy; Dami 2026</span>
           <div class="flex items-center gap-3">
             <a href="https://www.youtube.com/@DamiJJJ" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
