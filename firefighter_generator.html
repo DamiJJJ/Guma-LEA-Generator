@@ -1,82 +1,236 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="authors" content="Dami" />
-    <title>GUMA Tools</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <!-- Favicon -->
+    <meta name="author" content="Dami" />
+    <title>Firefighter Card Generator — GUMA Tools</title>
+
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
-    <!-- Apple/iOS/Android (192x192px) -->
     <link rel="apple-touch-icon" sizes="192x192" href="assets/favicon.ico" />
-    <!-- Safari pinned tab -->
-    <link rel="mask-icon" href="assets/favicon.ico" color="#f0c040" />
-    <link rel="manifest" href="assets/manifest.json" />
+    <link rel="manifest" href="manifest.json" />
+
+    <script src="js/tailwind.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "guma-bg": "#04045e",
+              "guma-panel": "#16213e",
+              "guma-panel-2": "#1a2a4a",
+              "guma-input": "#0f3460",
+              "guma-dark": "#0f1e3d",
+              "guma-footer": "#020338",
+              "guma-gold": "#f0c040",
+              "guma-gold-dark": "#c8960c",
+              "guma-border": "#2a2a4a",
+              "guma-border-2": "#2a2a5a",
+              "guma-text": "#eeeeee",
+              "guma-muted": "#aaaaaa",
+              "guma-danger": "#7b0000",
+            },
+            boxShadow: {
+              panel: "0 12px 32px rgba(0,0,0,.28)",
+              canvas: "0 4px 24px rgba(0,0,0,.5)",
+            },
+            maxWidth: {
+              "8xl": "1400px",
+            },
+            fontFamily: {
+              sans: ["Segoe UI", "Arial", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style type="text/tailwindcss">
+      @layer base {
+        html {
+          @apply h-full;
+        }
+
+        body {
+          @apply min-h-full text-guma-text font-sans antialiased;
+          background-color: #03034a; /* kolor końcowy gradientu jako fallback */
+          background-image:
+            radial-gradient(circle at top, rgba(240, 192, 64, 0.08), transparent 28%), linear-gradient(180deg, #5f0606 0%, #5e0404 40%, #4a0303 100%);
+          background-attachment: fixed; /* gradient nie "przewija się" ze stroną */
+        }
+
+        ::selection {
+          background: rgba(240, 192, 64, 0.35);
+          color: #fff;
+        }
+      }
+
+      @layer components {
+        .guma-page {
+          @apply mx-auto w-full max-w-8xl px-4 sm:px-6 lg:px-8;
+        }
+
+        .guma-topbar {
+          @apply sticky top-0 z-30 border-b border-white/10 bg-guma-bg/80 backdrop-blur;
+        }
+
+        .guma-brand {
+          @apply inline-flex items-center gap-3 text-guma-text no-underline;
+        }
+
+        .guma-brand-mark {
+          @apply inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-guma-gold/40 bg-guma-dark text-lg font-black text-guma-gold;
+        }
+
+        .guma-panel {
+          @apply rounded-2xl border border-guma-border bg-guma-panel shadow-panel;
+        }
+
+        .guma-label {
+          @apply mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-guma-muted;
+        }
+
+        .guma-input {
+          @apply w-full rounded-lg border border-guma-border-2 bg-guma-input px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-guma-gold focus:ring-1 focus:ring-guma-gold/40 focus:outline-none transition;
+        }
+
+        .guma-select {
+          @apply guma-input appearance-auto;
+        }
+
+        .guma-btn-outline {
+          @apply inline-flex w-full items-center justify-center gap-2 rounded-lg border border-guma-gold bg-guma-input px-4 py-2 text-sm font-semibold text-guma-gold transition hover:bg-guma-gold hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-guma-gold;
+        }
+
+        .guma-btn-primary {
+          @apply inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold text-white transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-guma-gold;
+          background: linear-gradient(135deg, #f0c040, #c8960c);
+        }
+
+        .guma-btn-success {
+          @apply inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold text-white no-underline transition hover:opacity-90;
+          background: linear-gradient(135deg, #6cdd5e, #4ab034);
+        }
+
+        .guma-btn-back {
+          @apply inline-flex items-center gap-1.5 rounded-lg border border-guma-gold/50 bg-guma-input px-3 py-1.5 text-xs font-semibold text-guma-gold transition hover:border-guma-gold hover:bg-guma-gold hover:text-black;
+        }
+
+        .guma-form-section {
+          @apply mb-1 border-b border-guma-border pb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-guma-gold;
+        }
+
+        .faction-btn {
+          @apply flex w-24 cursor-pointer flex-col items-center gap-1.5 rounded-xl border-2 border-guma-border bg-guma-panel py-2.5 text-[11px] font-bold uppercase tracking-wider text-guma-muted transition hover:border-guma-gold hover:text-guma-gold;
+        }
+
+        .faction-btn.active {
+          @apply border-guma-gold bg-guma-panel-2 text-guma-gold;
+        }
+      }
+
+      @layer utilities {
+        .border-guma-border-2 {
+          border-color: #2a2a5a;
+        }
+      }
+    </style>
   </head>
-  <body data-faction="lscofd">
-    <button onclick="history.back()" class="btn-back">&larr; Go Back</button>
-    <h2>FIREFIGHTER CARD GENERATOR</h2>
 
-    <!-- Faction switcher -->
-    <div class="faction-switcher" id="factionSwitcher"></div>
+  <body class="flex min-h-full flex-col">
+    <header class="guma-topbar">
+      <div class="guma-page flex min-h-[64px] items-center justify-between gap-4 py-3">
+        <!-- <a href="index.html" class="guma-brand">
+          <span class="guma-brand-mark">G</span>
+          <span class="flex flex-col">
+            <span class="text-sm font-semibold uppercase tracking-[0.24em] text-guma-gold">GUMA Tools</span>
+            <span class="text-xs text-guma-muted">Generators &amp; report tools</span>
+          </span>
+        </a> -->
 
-    <div class="container">
-      <div class="form-panel">
-        <div id="customFactionPanel" style="display: none">
-          <h3>Custom Faction Details</h3>
+        <a href="index.html" class="guma-btn-back">&larr; Go Back</a>
+      </div>
+    </header>
 
-          <div class="form-group">
-            <label>Rank</label>
-            <input type="text" id="customRank" placeholder="Captain" oninput="applyCustomFaction()" />
-          </div>
+    <div class="guma-page pt-8 pb-4">
+      <h1 class="text-center text-2xl font-black uppercase tracking-[0.2em] text-guma-gold md:text-3xl">Firefighter Card Generator</h1>
+    </div>
 
-          <div class="form-group">
-            <label>Division</label>
-            <input type="text" id="customDivision" placeholder="Rescue Division" oninput="applyCustomFaction()" />
-          </div>
+    <div class="guma-page pb-4">
+      <div id="factionSwitcher" class="flex flex-wrap justify-center gap-3"></div>
+    </div>
 
-          <div class="form-group">
-            <label>Email Domain</label>
-            <input type="text" id="customEmailDomain" placeholder="lapd.online" oninput="applyCustomFaction()" />
+    <main class="guma-page flex flex-1 flex-col gap-6 pb-10 xl:flex-row xl:items-start">
+      <div class="guma-panel w-full p-6 xl:w-[480px] xl:flex-none">
+        <div id="customFactionPanel" style="display: none" class="mb-5 rounded-xl border border-guma-border-2 bg-guma-dark p-4">
+          <p class="guma-form-section">Custom Faction Details</p>
+
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <label class="guma-label" for="customRank">Rank</label>
+              <input class="guma-input" type="text" id="customRank" placeholder="Captain" oninput="applyCustomFaction()" />
+            </div>
+
+            <div>
+              <label class="guma-label" for="customDivision">Division</label>
+              <input class="guma-input" type="text" id="customDivision" placeholder="Rescue Division" oninput="applyCustomFaction()" />
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="guma-label" for="customEmailDomain">Email Domain</label>
+              <input class="guma-input" type="text" id="customEmailDomain" placeholder="lsfd.online" oninput="applyCustomFaction()" />
+            </div>
           </div>
         </div>
 
-        <h3>Firefighter Details</h3>
+        <p class="guma-form-section mb-4">Firefighter Details</p>
 
-        <div class="form-group">
-          <label>Photo</label>
-          <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-            <input type="file" id="photoInput" accept="image/*" onchange="previewPhoto(event)" />
+        <div class="mb-4">
+          <label class="guma-label">Photo</label>
+
+          <div
+            class="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-guma-border px-4 py-5 text-center text-sm text-guma-muted transition hover:border-guma-gold hover:text-guma-gold"
+            onclick="document.getElementById('photoInput').click()"
+          >
+            <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)" />
             <span id="uploadText">Click to upload photo</span>
-            <img id="photoPreview" class="photo-preview" alt="preview" />
+            <img id="photoPreview" class="mt-2 hidden h-[120px] w-[100px] rounded object-cover" alt="preview" />
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="fullName" placeholder="John Nolan" />
+        <div class="mb-3">
+          <label class="guma-label" for="fullName">Full Name</label>
+          <input class="guma-input" type="text" id="fullName" placeholder="Andrew Warren" />
         </div>
 
-        <div class="form-group">
-          <label>Rank</label>
-          <select id="rank"></select>
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="rank">Rank</label>
+            <select class="guma-select" id="rank"></select>
+          </div>
+
+          <div>
+            <label class="guma-label" for="division">Division</label>
+            <select class="guma-select" id="division"></select>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Division</label>
-          <select id="division"></select>
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="serial">Serial #</label>
+            <input class="guma-input" type="text" id="serial" placeholder="46212" />
+          </div>
+
+          <div>
+            <label class="guma-label" for="badge">Badge #</label>
+            <input class="guma-input" type="text" id="badge" placeholder="25486" />
+          </div>
         </div>
 
-        <div style="display: flex; gap: 10px">
-          <div class="form-group" style="flex: 1"><label>Serial #</label><input type="text" id="serial" placeholder="46212" /></div>
-          <div class="form-group" style="flex: 1"><label>Badge #</label><input type="text" id="badge" placeholder="25486" /></div>
-        </div>
-
-        <div style="display: flex; gap: 10px">
-          <div class="form-group" style="flex: 1">
-            <label>Ethnicity</label>
-            <select id="ethnicity">
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="ethnicity">Ethnicity</label>
+            <select class="guma-select" id="ethnicity">
               <option>White</option>
               <option>Black</option>
               <option>Hispanic</option>
@@ -87,9 +241,10 @@
               <option>Other</option>
             </select>
           </div>
-          <div class="form-group" style="flex: 1">
-            <label>Gender</label>
-            <select id="gender">
+
+          <div>
+            <label class="guma-label" for="gender">Gender</label>
+            <select class="guma-select" id="gender">
               <option>Male</option>
               <option>Female</option>
               <option>Non-binary</option>
@@ -97,81 +252,80 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 10px">
-          <div class="form-group" style="flex: 1">
-            <label>Current Age</label>
-            <input type="number" id="age" placeholder="27" min="21" max="75" />
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="age">Current Age</label>
+            <input class="guma-input" type="number" id="age" placeholder="31" min="18" max="75" />
           </div>
-          <div class="form-group" style="flex: 1">
-            <label>Year Hired</label>
-            <select id="yearHired"></select>
+
+          <div>
+            <label class="guma-label" for="yearHired">Year Hired</label>
+            <select class="guma-select" id="yearHired"></select>
           </div>
         </div>
 
-        <div style="display: flex; gap: 10px">
-          <div class="form-group" style="flex: 1"><label>Height</label><input type="text" id="height" placeholder='5&#39;9"' /></div>
-          <div class="form-group" style="flex: 1"><label>Weight (lbs)</label><input type="text" id="weight" placeholder="195lbs" /></div>
+        <div class="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="height">Height</label>
+            <input class="guma-input" type="text" id="height" placeholder="6'0&quot;" />
+          </div>
+
+          <div>
+            <label class="guma-label" for="weight">Weight (lbs)</label>
+            <input class="guma-input" type="text" id="weight" placeholder="205lbs" />
+          </div>
         </div>
 
-        <div class="form-group" style="margin-top: 6px">
-          <label>Payments</label>
-          <button class="btn-random" onclick="randomizePay()">&#127922; Randomize Pay</button>
+        <p class="guma-form-section mb-4">Payments</p>
+
+        <div class="mb-3">
+          <button class="guma-btn-outline" onclick="randomizePay()">🎲 Randomize Pay</button>
         </div>
 
-        <div style="display: flex; gap: 8px">
-          <div class="form-group" style="flex: 1"><label>Regular Pay</label><input type="text" id="payRegular" placeholder="$0.00" /></div>
-          <div class="form-group" style="flex: 1"><label>Overtime Pay</label><input type="text" id="payOvertime" placeholder="$0.00" /></div>
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="payRegular">Regular Pay</label>
+            <input class="guma-input" type="text" id="payRegular" placeholder="$0.00" />
+          </div>
+
+          <div>
+            <label class="guma-label" for="payOvertime">Overtime Pay</label>
+            <input class="guma-input" type="text" id="payOvertime" placeholder="$0.00" />
+          </div>
         </div>
-        <div style="display: flex; gap: 8px">
-          <div class="form-group" style="flex: 1"><label>Other Pay</label><input type="text" id="payOther" placeholder="$0.00" /></div>
-          <div class="form-group" style="flex: 1"><label>Health Benefits</label><input type="text" id="payHealth" placeholder="$0.00" /></div>
+
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <label class="guma-label" for="payOther">Other Pay</label>
+            <input class="guma-input" type="text" id="payOther" placeholder="$0.00" />
+          </div>
+
+          <div>
+            <label class="guma-label" for="payHealth">Health Benefits</label>
+            <input class="guma-input" type="text" id="payHealth" placeholder="$0.00" />
+          </div>
         </div>
-        <div class="form-group">
-          <label>Retirement Pay</label>
-          <input type="text" id="payRetirement" placeholder="unknown" />
+
+        <div class="mb-1">
+          <label class="guma-label" for="payRetirement">Retirement Pay</label>
+          <input class="guma-input" type="text" id="payRetirement" placeholder="unknown" />
         </div>
       </div>
 
-      <div class="preview-panel">
-        <h3>Preview</h3>
-        <canvas id="cardCanvas" width="840" height="680"></canvas>
-        <div class="btn-row">
-          <button class="btn-download" id="downloadBtn" onclick="downloadCard()">&#11015; Download PNG</button>
-          <a href="https://tipply.pl/@dami" target="_blank" rel="noopener noreferrer" class="btn-download btn-support">&#9749; Support project</a>
+      <div class="guma-panel flex flex-1 flex-col items-center gap-5 p-6">
+        <p class="guma-form-section w-full self-start">Preview</p>
+
+        <canvas id="cardCanvas" width="840" height="680" class="h-auto w-full max-w-[500px] shadow-canvas"></canvas>
+
+        <div class="flex w-full max-w-[500px] flex-col gap-3 sm:flex-row">
+          <button class="guma-btn-primary" id="downloadBtn" onclick="downloadCard()">⬇ Download PNG</button>
+
+          <a href="https://tipply.pl/@dami" target="_blank" rel="noopener noreferrer" class="guma-btn-success"> ☕ Support project </a>
         </div>
       </div>
-    </div>
+    </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <span class="footer-text">GUMA Tools v1.4 &copy; Dami 2026</span>
-        <div class="footer-links">
-          <a href="https://www.youtube.com/@DamiJJJ" target="_blank" rel="noopener noreferrer" class="footer-icon-link" aria-label="YouTube">
-            <!-- YouTube icon -->
-            <svg class="icon icon-youtube" viewBox="0 0 16 16" aria-hidden="true">
-              <path
-                d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"
-              />
-            </svg>
-          </a>
-
-          <a href="https://www.twitch.tv/ytdamipl" target="_blank" rel="noopener noreferrer" class="footer-icon-link" aria-label="Twitch">
-            <!-- Twitch icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitch" viewBox="0 0 16 16">
-              <path d="M3.857 0 1 2.857v10.286h3.429V16l2.857-2.857H9.57L14.714 8V0zm9.714 7.429-2.285 2.285H9l-2 2v-2H4.429V1.143h9.142z" />
-              <path d="M11.857 3.143h-1.143V6.57h1.143zm-3.143 0H7.571V6.57h1.143z" />
-            </svg>
-          </a>
-          <a href="https://discord.gg/gzQC2kUFbQ" target="_blank" rel="noopener noreferrer" class="footer-icon-link" aria-label="Discord">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-discord" viewBox="0 0 16 16">
-              <path
-                d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612"
-              />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </footer>
+    <guma-footer></guma-footer>
 
     <script src="js/factions.js"></script>
     <script src="js/ui-helpers.js"></script>
@@ -184,5 +338,6 @@
         });
       });
     </script>
+    <script src="js/components.js"></script>
   </body>
 </html>

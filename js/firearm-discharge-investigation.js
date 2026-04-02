@@ -81,10 +81,10 @@ const YN_FIELDS = [
 
 function makeYnSelects(prefix) {
   return (
-    `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">` +
+    `<div class="flex flex-wrap gap-2 mt-3 items-end">` +
     YN_FIELDS.map(
       (f) => `
-      <div class="form-group" style="flex:1;min-width:70px;">
+      <div class="form-group !mb-0" style="flex:1;min-width:68px;">
         <label>${f.label}</label>
         <select id="${prefix}_${f.id}">
           <option value="-">-</option>

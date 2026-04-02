@@ -399,5 +399,5 @@ function initGenerator({ factionType = null, defaultFaction = "lspd" } = {}) {
   randomizePay();
   generateCard();
 
-  document.querySelector(".form-panel").addEventListener("input", debounce(generateCard));
+  document.querySelector(".guma-panel").addEventListener("input", debounce(generateCard));
 }
